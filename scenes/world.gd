@@ -1,19 +1,27 @@
 extends Node2D
 
+var gravitational_constant_default_number:float = 6.6743
+var gravitational_constant_default_power:int = -11
 
-# Called when the node enters the scene tree for the first time.
+var gravitational_constant: float
+
+var zoom: float = 1
+
+signal Gravitational_Constant_Changed_Signal
+
+
 func _ready():
-	pass # Replace with function body.
+	update_gravitational_constant(gravitational_constant_default_number, gravitational_constant_default_power)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 
 
-func _on_quit_button_pressed():
+func update_gravitational_constant(number, power):
+	gravitational_constant = number * pow(10, power)
+	Gravitational_Constant_Changed_Signal.emit()
+
+
+func quit_request():
 	self.get_tree().quit()
-
-
-func _on_create_button_pressed():
-	pass # Replace with function body.

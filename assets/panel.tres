@@ -1,0 +1,11 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://kgh456rotn0u"]
+
+[sub_resource type="MeshTexture" id="MeshTexture_lyhyk"]
+
+[resource]
+texture = SubResource("MeshTexture_lyhyk")
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+modulate_color = Color(0.196078, 0.196078, 0.196078, 1)

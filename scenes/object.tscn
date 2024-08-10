@@ -1,6 +1,155 @@
-[gd_scene load_steps=2 format=3 uid="uid://cn7dsabwfbabq"]
+[gd_scene load_steps=7 format=3 uid="uid://cn7dsabwfbabq"]
 
 [ext_resource type="Script" path="res://scenes/object.gd" id="1_yuynv"]
+[ext_resource type="StyleBox" uid="uid://kgh456rotn0u" path="res://assets/panel.tres" id="2_bx35g"]
 
-[node name="Object" type="Node2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_nopxl"]
+resource_local_to_scene = true
+radius = 1.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_rx2ln"]
+resource_local_to_scene = true
+radius = 1.0
+height = 2.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tdury"]
+resource_local_to_scene = true
+radius = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lclju"]
+resource_local_to_scene = true
+
+[node name="Object" type="RigidBody2D"]
+can_sleep = false
+lock_rotation = true
 script = ExtResource("1_yuynv")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_nopxl")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+mesh = SubResource("SphereMesh_rx2ln")
+
+[node name="AreaOfInfulence" type="Area2D" parent="."]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaOfInfulence"]
+shape = SubResource("CircleShape2D_tdury")
+
+[node name="HighLightArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HighLightArea"]
+shape = SubResource("CircleShape2D_lclju")
+
+[node name="Settings" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Settings"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Panel" type="Panel" parent="Settings/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_bx35g")
+
+[node name="GridContainer" type="GridContainer" parent="Settings/MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="MassLabel" type="Label" parent="Settings/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Mass
+"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Settings/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MassLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/MarginContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+text = "* 10^"
+
+[node name="MassPowerLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="VelocityLabel" type="Label" parent="Settings/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Velocity"
+
+[node name="ChangeVelocityButton" type="Button" parent="Settings/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Change velocity"
+
+[node name="Info" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Info"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="Panel" type="Panel" parent="Info/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_bx35g")
+
+[node name="GridContainer" type="GridContainer" parent="Info/MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Position:"
+
+[node name="PositionInfoLabel" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Velocity:"
+
+[node name="VelocityInfoLabel" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Mass:"
+
+[node name="MassInfoLabel" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Radius:"
+
+[node name="RadiusLabel" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Gravitational threshold radius:"
+
+[node name="GravitationalRadiusLabel" type="Label" parent="Info/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[connection signal="body_entered" from="AreaOfInfulence" to="." method="_on_area_of_infulence_body_entered"]
+[connection signal="body_exited" from="AreaOfInfulence" to="." method="_on_area_of_infulence_body_exited"]
+[connection signal="mouse_entered" from="HighLightArea" to="." method="_on_high_light_area_mouse_entered"]
+[connection signal="mouse_exited" from="HighLightArea" to="." method="_on_high_light_area_mouse_exited"]
+[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/HBoxContainer/MassLineEdit" to="." method="_on_mass_line_edit_text_submitted"]
+[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/HBoxContainer/MassPowerLineEdit" to="." method="_on_mass_power_line_edit_text_submitted"]
+[connection signal="pressed" from="Settings/MarginContainer/GridContainer/ChangeVelocityButton" to="." method="_on_change_velocity_button_pressed"]
