@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cn7dsabwfbabq"]
+[gd_scene load_steps=9 format=3 uid="uid://cn7dsabwfbabq"]
 
 [ext_resource type="Script" path="res://scenes/object.gd" id="1_yuynv"]
 [ext_resource type="StyleBox" uid="uid://kgh456rotn0u" path="res://assets/panel.tres" id="2_bx35g"]
@@ -12,12 +12,20 @@ resource_local_to_scene = true
 radius = 1.0
 height = 2.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_4t5m2"]
+resource_local_to_scene = true
+radius = 1.0
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_tdury"]
 resource_local_to_scene = true
 radius = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lclju"]
 resource_local_to_scene = true
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ljgfr"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
 
 [node name="Object" type="RigidBody2D"]
 can_sleep = false
@@ -32,6 +40,11 @@ shape = SubResource("CircleShape2D_nopxl")
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 mesh = SubResource("SphereMesh_rx2ln")
 
+[node name="TouchingArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TouchingArea"]
+shape = SubResource("CircleShape2D_4t5m2")
+
 [node name="AreaOfInfulence" type="Area2D" parent="."]
 monitorable = false
 
@@ -42,6 +55,11 @@ shape = SubResource("CircleShape2D_tdury")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HighLightArea"]
 shape = SubResource("CircleShape2D_lclju")
+
+[node name="TrailParticles" type="GPUParticles2D" parent="."]
+amount = 500
+process_material = SubResource("ParticleProcessMaterial_ljgfr")
+lifetime = 5.0
 
 [node name="Settings" type="Control" parent="."]
 visible = false
@@ -68,26 +86,47 @@ layout_mode = 2
 text = "Mass
 "
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Settings/MarginContainer/GridContainer"]
+[node name="MassHBoxContainer" type="HBoxContainer" parent="Settings/MarginContainer/GridContainer"]
 layout_mode = 2
 
-[node name="MassLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/HBoxContainer"]
+[node name="MassLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/MassHBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+expand_to_text_length = true
 
-[node name="Label" type="Label" parent="Settings/MarginContainer/GridContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Settings/MarginContainer/GridContainer/MassHBoxContainer"]
 layout_mode = 2
 text = "* 10^"
 
-[node name="MassPowerLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/HBoxContainer"]
+[node name="MassPowerLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/MassHBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+expand_to_text_length = true
 
 [node name="VelocityLabel" type="Label" parent="Settings/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "Velocity"
 
-[node name="ChangeVelocityButton" type="Button" parent="Settings/MarginContainer/GridContainer"]
+[node name="VelocityHBoxContainer" type="HBoxContainer" parent="Settings/MarginContainer/GridContainer"]
 layout_mode = 2
-text = "Change velocity"
+
+[node name="Label" type="Label" parent="Settings/MarginContainer/GridContainer/VelocityHBoxContainer"]
+layout_mode = 2
+text = "x:"
+
+[node name="VelocityXLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/VelocityHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+expand_to_text_length = true
+
+[node name="Label2" type="Label" parent="Settings/MarginContainer/GridContainer/VelocityHBoxContainer"]
+layout_mode = 2
+text = "y:"
+
+[node name="VelocityYLineEdit" type="LineEdit" parent="Settings/MarginContainer/GridContainer/VelocityHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+expand_to_text_length = true
 
 [node name="Info" type="Control" parent="."]
 visible = false
@@ -146,10 +185,13 @@ text = "Gravitational threshold radius:"
 [node name="GravitationalRadiusLabel" type="Label" parent="Info/MarginContainer/GridContainer"]
 layout_mode = 2
 
+[connection signal="body_shape_entered" from="TouchingArea" to="." method="_on_touching_area_body_shape_entered"]
+[connection signal="body_shape_exited" from="TouchingArea" to="." method="_on_touching_area_body_shape_exited"]
 [connection signal="body_entered" from="AreaOfInfulence" to="." method="_on_area_of_infulence_body_entered"]
 [connection signal="body_exited" from="AreaOfInfulence" to="." method="_on_area_of_infulence_body_exited"]
 [connection signal="mouse_entered" from="HighLightArea" to="." method="_on_high_light_area_mouse_entered"]
 [connection signal="mouse_exited" from="HighLightArea" to="." method="_on_high_light_area_mouse_exited"]
-[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/HBoxContainer/MassLineEdit" to="." method="_on_mass_line_edit_text_submitted"]
-[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/HBoxContainer/MassPowerLineEdit" to="." method="_on_mass_power_line_edit_text_submitted"]
-[connection signal="pressed" from="Settings/MarginContainer/GridContainer/ChangeVelocityButton" to="." method="_on_change_velocity_button_pressed"]
+[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/MassHBoxContainer/MassLineEdit" to="." method="_on_mass_line_edit_text_submitted"]
+[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/MassHBoxContainer/MassPowerLineEdit" to="." method="_on_mass_power_line_edit_text_submitted"]
+[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/VelocityHBoxContainer/VelocityXLineEdit" to="." method="_on_velocity_x_line_edit_text_submitted"]
+[connection signal="text_submitted" from="Settings/MarginContainer/GridContainer/VelocityHBoxContainer/VelocityYLineEdit" to="." method="_on_velocity_y_line_edit_text_submitted"]

@@ -59,9 +59,15 @@ func _input(event):
 		world.zoom *= 1/zoom_speed
 	
 	if event is InputEventMouseButton && create && event.is_pressed() && event.button_index == MOUSE_BUTTON_LEFT:
-		var object = object_file.instantiate()
-		object.position = self.position - (get_viewport().get_visible_rect().size / 2) + (event.position / camera.zoom)
-		world.add_child(object)
+		# Get the position of the click from the origin rather than the centre of the screen
+		var local_click_position = event.position - (get_viewport().get_visible_rect().size / 2)
+		
+		# When zoomed out, screen sees more pixels, visa versa
+		var local_click_position_scaled = local_click_position / camera.zoom
+		
+		# Get coordinates of the click relative to world origin
+		var global_click_position = self.position + local_click_position_scaled
+		world.create_object(global_click_position, -1)
 	
 	if event.is_action_pressed("ui_cancel"):
 		edit = false
@@ -98,9 +104,22 @@ func _on_gravitational_constant_power_line_edit_text_submitted(new_text):
 func _on_gravitational_constant_reset_button_pressed():
 	gravitational_constant_number_line_edit.text = str(world.gravitational_constant_default_number)
 	gravitational_constant_power_line_edit.text = str(world.gravitational_constant_default_power)
+	
 
 
 func _on_back_to_origin_button_pressed():
 	self.position = Vector2()
 	camera.zoom = Vector2(1, 1)
 	world.zoom = 1
+
+
+func _on_time_scale_min_line_edit_text_submitted(new_text: String) -> void:
+	pass # Replace with function body.
+
+
+func _on_time_scale_slider_value_changed(value: float) -> void:
+	pass # Replace with function body.
+
+
+func _on_time_scale_max_line_edit_text_submitted(new_text: String) -> void:
+	pass # Replace with function body.

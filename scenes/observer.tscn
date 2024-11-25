@@ -19,8 +19,8 @@ anchors_preset = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
-offset_right = 106.0
-offset_bottom = 31.0
+offset_right = 550.0
+offset_bottom = 36.0
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 
@@ -54,6 +54,23 @@ text = "Back to origin"
 layout_mode = 2
 text = "World Settings"
 
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimeScaleMinLineEdit" type="LineEdit" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+expand_to_text_length = true
+
+[node name="TimeScaleSlider" type="HSlider" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+ticks_on_borders = true
+
+[node name="TimeScaleMaxLineEdit" type="LineEdit" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+expand_to_text_length = true
+
 [node name="WorldSettingsPanel" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
@@ -71,7 +88,6 @@ text = "Reset"
 
 [node name="GravitationalConstantNumberLineEdit" type="LineEdit" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/WorldSettingsPanel/GravitationalConstant"]
 layout_mode = 2
-size_flags_horizontal = 3
 text = "6.6743"
 placeholder_text = "Number"
 expand_to_text_length = true
@@ -95,6 +111,9 @@ text = "N m^2 kg^(-2)"
 [connection signal="pressed" from="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/BackToOriginButton" to="." method="_on_back_to_origin_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/WorldSettingsButton" to="." method="_on_world_settings_button_pressed"]
+[connection signal="text_submitted" from="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/TimeScaleMinLineEdit" to="." method="_on_time_scale_min_line_edit_text_submitted"]
+[connection signal="value_changed" from="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/TimeScaleSlider" to="." method="_on_time_scale_slider_value_changed"]
+[connection signal="text_submitted" from="CanvasLayer/UI/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/TimeScaleMaxLineEdit" to="." method="_on_time_scale_max_line_edit_text_submitted"]
 [connection signal="pressed" from="CanvasLayer/UI/MarginContainer/VBoxContainer/WorldSettingsPanel/GravitationalConstant/GravitationalConstantResetButton" to="." method="_on_gravitational_constant_reset_button_pressed"]
 [connection signal="text_submitted" from="CanvasLayer/UI/MarginContainer/VBoxContainer/WorldSettingsPanel/GravitationalConstant/GravitationalConstantNumberLineEdit" to="." method="_on_gravitational_constant_number_line_edit_text_submitted"]
 [connection signal="text_submitted" from="CanvasLayer/UI/MarginContainer/VBoxContainer/WorldSettingsPanel/GravitationalConstant/GravitationalConstantPowerLineEdit" to="." method="_on_gravitational_constant_power_line_edit_text_submitted"]
